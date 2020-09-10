@@ -80,7 +80,9 @@ var userbookings=[
 ];
 router.use('/users',require('./users'))
 const home_controller= require('../controllers/home_controller');
-router.get('/book', function(req, res, next) {
+
+//to search the cabs available nearby
+router.get('/search', function(req, res, next) {
     if (req.query.lattitude && req.query.longitude && !isNaN(req.query.lattitude) && !isNaN(req.query.longitude)) {
       var lattitude = parseInt(req.query.lattitude);
       var longitude = parseInt(req.query.longitude);
@@ -91,9 +93,9 @@ router.get('/book', function(req, res, next) {
       var color = req.query.color || null;
       var cab = getClosestCab(userLocation, color);
       if (cab) {
-        cab.isBooked = true;
+        // cab.isBooked = true;
         res.json({
-          message: "Cab booked!",
+          message: "Nearby cab",
           cabID: cab.id,
           driverName: cab.driverName,
           driverNumber: cab.driverNumber,
@@ -113,6 +115,8 @@ router.get('/book', function(req, res, next) {
   });
   
   
+
+  //to complete the ride, then that cab will be available to take other users request 
   router.get('/complete', function(req, res, next) {
     if (req.query.id && !isNaN(req.query.id) && req.query.lattitude && req.query.longitude && !isNaN(req.query.lattitude) && !isNaN(req.query.longitude)) {
       var cabID = parseInt(req.query.id);
@@ -154,12 +158,16 @@ router.get('/book', function(req, res, next) {
     }
   });
   
+
+  //to show all the cabs available on our application
   router.get('/showall', function(req, res, next) {
     res.json({
       cabs: cabs
     });
   });
   
+
+  //get distance form cab distance and user distance 
   function getDistance(location1, location2) {
     var a = location1.lattitude - location2.lattitude;
     var b = location1.longitude - location2.longitude;
@@ -167,6 +175,8 @@ router.get('/book', function(req, res, next) {
     return c;
   }
   
+
+  //function to get the closest cab 
   function getClosestCab (location, color) {
     var closest = null;
     var closestDistance = Infinity;
@@ -193,8 +203,8 @@ router.get('/book', function(req, res, next) {
     return closest;
   }
 
-
-router.get('/confirm', function(req,res,next){
+//confirm the booking , that cab will not be available till ride complete 
+router.get('/book', function(req,res,next){
     var cabID = parseInt(req.query.id);
     var userName= req.query.name;
     var origin= req.query.origin;
@@ -221,7 +231,7 @@ router.get('/confirm', function(req,res,next){
     if(bookedCab){
         var id= bookedCab.id;
         var drivername=bookedCab.driverName;
-
+        bookedCab.isBooked = true;
         res.json({
             mesage:"Yo have booked a cab successfully, driver will come to your place soon",
             booked_Cab_Id: id,
@@ -231,11 +241,19 @@ router.get('/confirm', function(req,res,next){
 
 
 })
-router.get('/showallusers', function(req, res, next) {
+
+// //to show all the users 
+// router.get('/showallusers', function(req, res, next) {
   
-  res.json({
-    userdetails: userdetails
-  });
-});
-router.get('/',home_controller.home)
+//   res.json({
+//     userdetails: userdetails
+//   });
+// });
+
+
+//home page render 
+router.get('/',home_controller.home);
+
+router.get('/mybookings',home_controller.mybookings )
+
 module.exports=router;
