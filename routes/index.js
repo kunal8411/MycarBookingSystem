@@ -1,6 +1,7 @@
 const express= require('express');
 const path= require('path');
 const router= express.Router();
+const Customers= require('../models/customer')
 var cabs = [{
     id: 1,
     driverName: "driver 1",
@@ -53,6 +54,31 @@ var cabs = [{
     color: "WHITE"
   }];
 
+//user details 
+var userdetails=[
+  {
+      name:"kunal",
+      phoneNo:"1111111111111",
+      id:"4562356",
+      
+  },
+  {
+      name:"Piyush",
+      phoneNo:"22222222222222",
+      id:"54546545"
+  },
+  {
+      name:"Debashis",
+      phoneNo:"33333333333333",
+      id:"455872456"
+  }
+]
+var userbookings=[
+  {
+    
+  }
+];
+router.use('/users',require('./users'))
 const home_controller= require('../controllers/home_controller');
 router.get('/book', function(req, res, next) {
     if (req.query.lattitude && req.query.longitude && !isNaN(req.query.lattitude) && !isNaN(req.query.longitude)) {
@@ -168,5 +194,48 @@ router.get('/book', function(req, res, next) {
   }
 
 
+router.get('/confirm', function(req,res,next){
+    var cabID = parseInt(req.query.id);
+    var userName= req.query.name;
+    var origin= req.query.origin;
+    var destination= req.query.destination;
+    var userid=req.query.userid;
+
+
+    var info= [];
+    info['origin']= origin;
+    info['destination']=destination
+    info['userid']= userid;
+    Customers.register(info, function(err,customer){
+      if(err){console.log(err)}
+     
+  });
+
+    cabs.forEach(function(cab) {
+        if (cabID === cab.id) {
+          bookedCab = cab;
+        }
+    });
+
+   
+    if(bookedCab){
+        var id= bookedCab.id;
+        var drivername=bookedCab.driverName;
+
+        res.json({
+            mesage:"Yo have booked a cab successfully, driver will come to your place soon",
+            booked_Cab_Id: id,
+            driverName: drivername
+        })
+    }
+
+
+})
+router.get('/showallusers', function(req, res, next) {
+  
+  res.json({
+    userdetails: userdetails
+  });
+});
 router.get('/',home_controller.home)
 module.exports=router;

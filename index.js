@@ -6,15 +6,22 @@ var app = express();
 app.use(express.urlencoded());
 const expressLayout=require('express-ejs-layouts');
 app.use(cookieParser());
+
 const boduparser= require('body-parser');
+const passport=require('passport');
+const passportJwt= require('./config/passport-jwt-strategy')
+const mongoose= require('./config/mongoose');
+
+
 const ejs= require('ejs');
-const session= require('express-session');
+// const session= require('express-session');
 app.use(express.static('./assets'));
 app.set('view engine','ejs');
 app.set('views','./views');
-app.use(expressLayout);
-app.set('layout extractStyles',true);
-app.set('layout extractScripts',true);
+app.use(express.json());
+// app.use(expressLayout);
+// app.set('layout extractStyles',true);
+// app.set('layout extractScripts',true);
 
 app.use('/',require('./routes/index'))
 
