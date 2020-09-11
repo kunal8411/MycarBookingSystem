@@ -10,6 +10,8 @@ const { route } = require('.');
 const user_controller= require('../controllers/users_controller')
 router.get('/login',home_controller.login)
 
+
+//post request for form to create a user 
 router.post('/createsession', home_controller.createsession)
 
 

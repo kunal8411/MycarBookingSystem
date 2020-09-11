@@ -54,30 +54,8 @@ var cabs = [{
     color: "WHITE"
   }];
 
-//user details 
-var userdetails=[
-  {
-      name:"kunal",
-      phoneNo:"1111111111111",
-      id:"4562356",
-      
-  },
-  {
-      name:"Piyush",
-      phoneNo:"22222222222222",
-      id:"54546545"
-  },
-  {
-      name:"Debashis",
-      phoneNo:"33333333333333",
-      id:"455872456"
-  }
-]
-var userbookings=[
-  {
-    
-  }
-];
+
+
 router.use('/users',require('./users'))
 const home_controller= require('../controllers/home_controller');
 
@@ -160,7 +138,7 @@ router.get('/search', function(req, res, next) {
   
 
   //to show all the cabs available on our application
-  router.get('/showall', function(req, res, next) {
+  router.get('/showallcabs', function(req, res, next) {
     res.json({
       cabs: cabs
     });
@@ -254,6 +232,10 @@ router.get('/book', function(req,res,next){
 //home page render 
 router.get('/',home_controller.home);
 
-router.get('/mybookings',home_controller.mybookings )
 
+//to get all my previous bookings
+router.get('/mybookings',home_controller.mybookings );
+
+//to go to jwt token session
+router.use('/api', require('./api'));
 module.exports=router;

@@ -33,6 +33,6 @@ module.exports.mybookings= async function(req,res){
     var user= await Customers.findById({_id:userID});
     return res.json(200, {
         message:"My previous bookings",
-        bookings:user.address
+        Mybookings:user.address
     })
 }
